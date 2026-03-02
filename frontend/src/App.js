@@ -1,11 +1,10 @@
 // App.js
 import { useState, useEffect, useRef } from "react";
-import ModeSelector from "./components/ModeSelector";
 import ChatWindow from "./components/ChatWindow";
 import ChatInput from "./components/ChatInput";
 import Sidebar from "./components/Sidebar";
 import WelcomeScreen from "./components/WelcomeScreen";
-import "./App.css";
+import "./styles/App.css";
 
 // 🔹 Single source of truth for bot display names
 const MODE_META = {
