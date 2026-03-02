@@ -128,23 +128,52 @@ export const streamChatReply = async (contents, mode, res) => {
   const systemInstruction =
     MODE_INSTRUCTIONS[mode] || MODE_INSTRUCTIONS.default;
 
-  try {
-    const stream = await ai.models.generateContentStream({
-      model: "gemini-3-flash-preview",
-      contents,
-      config: { systemInstruction },
-    });
+  const MAX_RETRIES = 3;
+  let attempt = 0;
 
-    for await (const chunk of stream) {
-      const text = chunk.text;
-      if (text) {
-        res.write(text);
+  while (attempt < MAX_RETRIES) {
+    try {
+      const stream = await ai.models.generateContentStream({
+        model: "gemini-3-flash-preview",
+        contents,
+        config: { systemInstruction },
+      });
+
+      // ✅ stream started successfully — now pipe it
+      for await (const chunk of stream) {
+        const text = chunk.text;
+        if (text) {
+          res.write(text);
+        }
       }
-    }
 
-    res.end();
-  } catch (error) {
-    console.error("❌ Streaming error:", error?.message || error);
-    res.status(500).end();
+      res.end();
+      return; // 🔥 IMPORTANT: exit after success
+    } catch (error) {
+      const status = error?.status;
+      const isRetryable = status === 503 || status === 429;
+
+      attempt++;
+
+      if (!isRetryable || attempt >= MAX_RETRIES) {
+        console.error("❌ Streaming final failure:", error?.message || error);
+
+        // ⚠️ only send status if headers not already sent
+        if (!res.headersSent) {
+          res.status(500).end();
+        } else {
+          res.end();
+        }
+
+        return;
+      }
+
+      const backoff = 1000 * Math.pow(2, attempt - 1);
+      console.warn(
+        `⚠️ Gemini busy (stream). Retry ${attempt}/${MAX_RETRIES} in ${backoff}ms`
+      );
+
+      await delay(backoff);
+    }
   }
 };
