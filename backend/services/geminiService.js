@@ -123,3 +123,28 @@ export const generateChatReply = async (contents, mode = "default") => {
     }
   }
 };
+
+export const streamChatReply = async (contents, mode, res) => {
+  const systemInstruction =
+    MODE_INSTRUCTIONS[mode] || MODE_INSTRUCTIONS.default;
+
+  try {
+    const stream = await ai.models.generateContentStream({
+      model: "gemini-3-flash-preview",
+      contents,
+      config: { systemInstruction },
+    });
+
+    for await (const chunk of stream) {
+      const text = chunk.text;
+      if (text) {
+        res.write(text);
+      }
+    }
+
+    res.end();
+  } catch (error) {
+    console.error("❌ Streaming error:", error?.message || error);
+    res.status(500).end();
+  }
+};

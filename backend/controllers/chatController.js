@@ -1,4 +1,4 @@
-import { generateChatReply } from "../services/geminiService.js";
+import { streamChatReply } from "../services/geminiService.js";
 
 export const chatHandler = async (req, res) => {
   const startTime = Date.now();
@@ -20,12 +20,15 @@ export const chatHandler = async (req, res) => {
       },
     ];
 
-    const reply = await generateChatReply(contents, mode);
+    // ✅ MUST set headers BEFORE streaming
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Transfer-Encoding", "chunked");
+
+    // ✅ ONLY ONE CALL — pass res
+    await streamChatReply(contents, mode, res);
 
     const duration = Date.now() - startTime;
     console.log(`⏱️ Response time: ${duration} ms`);
-
-    res.json({ reply });
   } catch (error) {
     console.error("❌ Chat error:", error?.message || error);
     res.status(500).json({ error: "Failed to generate response" });
