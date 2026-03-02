@@ -185,6 +185,8 @@ function MessageBubble({ role, text, botLabel, botColor, isLatest }) {
   // In MessageBubble.jsx - Fix the parseInlineFormatting function
 
   // Parse inline formatting (bold, code, etc.)
+  // In MessageBubble.jsx - Update parseInlineFormatting to handle math
+
   const parseInlineFormatting = (text) => {
     if (!text) return text;
 
@@ -211,41 +213,82 @@ function MessageBubble({ role, text, botLabel, botColor, isLatest }) {
       parts.push(text.slice(lastIndex));
     }
 
-    // Now process each part for inline code
+    // Now process each part for inline code AND math
     const finalParts = [];
 
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
 
       if (typeof part === "string") {
-        // Process string parts for inline code
+        // Process string parts for inline code and math
         const codeRegex = /`(.*?)`/g;
-        const codeParts = [];
-        let codeLastIndex = 0;
+        const mathRegex = /\$(.*?)\$/g; // Match $...$ for math
 
-        while ((match = codeRegex.exec(part)) !== null) {
-          if (match.index > codeLastIndex) {
-            codeParts.push(part.slice(codeLastIndex, match.index));
+        // First handle math
+        const mathParts = [];
+        let mathLastIndex = 0;
+
+        while ((match = mathRegex.exec(part)) !== null) {
+          if (match.index > mathLastIndex) {
+            mathParts.push(part.slice(mathLastIndex, match.index));
           }
-          codeParts.push(
-            <code key={`${i}-code-${match.index}`} className="inline-code">
+
+          // Add math as italic with monospace (or you could use a proper math library)
+          mathParts.push(
+            <span key={`${i}-math-${match.index}`} className="math-inline">
               {match[1]}
-            </code>,
+            </span>,
           );
-          codeLastIndex = match.index + match[0].length;
+
+          mathLastIndex = match.index + match[0].length;
         }
 
-        if (codeLastIndex < part.length) {
-          codeParts.push(part.slice(codeLastIndex));
+        if (mathLastIndex < part.length) {
+          mathParts.push(part.slice(mathLastIndex));
         }
 
-        if (codeParts.length > 1) {
-          // This part had code blocks
-          finalParts.push(...codeParts);
-        } else {
-          // No code blocks, add the original string
-          finalParts.push(part);
+        // Then process each math part for inline code
+        const processedParts = [];
+
+        for (let j = 0; j < mathParts.length; j++) {
+          const mathPart = mathParts[j];
+
+          if (typeof mathPart === "string") {
+            // Process for inline code
+            const codeParts = [];
+            let codeLastIndex = 0;
+
+            while ((match = codeRegex.exec(mathPart)) !== null) {
+              if (match.index > codeLastIndex) {
+                codeParts.push(mathPart.slice(codeLastIndex, match.index));
+              }
+              codeParts.push(
+                <code
+                  key={`${i}-${j}-code-${match.index}`}
+                  className="inline-code"
+                >
+                  {match[1]}
+                </code>,
+              );
+              codeLastIndex = match.index + match[0].length;
+            }
+
+            if (codeLastIndex < mathPart.length) {
+              codeParts.push(mathPart.slice(codeLastIndex));
+            }
+
+            if (codeParts.length > 1) {
+              processedParts.push(...codeParts);
+            } else {
+              processedParts.push(mathPart);
+            }
+          } else {
+            // This is already a math element
+            processedParts.push(mathPart);
+          }
         }
+
+        finalParts.push(...processedParts);
       } else {
         // This is already a React element (bold text)
         finalParts.push(part);
@@ -733,6 +776,51 @@ function MessageBubble({ role, text, botLabel, botColor, isLatest }) {
         .bullet-content strong {
           font-weight: 700;
           color: inherit;
+        }
+
+        .code-block {
+          margin: 0;
+          padding: 16px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          font-family: "Fira Code", "Courier New", monospace;
+          font-size: 13px;
+          line-height: 1.5;
+          color: #e4e4e7;
+          white-space: pre-wrap; /* This allows wrapping */
+          word-break: break-word; /* Breaks long words if needed */
+          max-width: 100%; /* Ensures it doesn't overflow container */
+        }
+
+        /* Also ensure the wrapper doesn't overflow */
+        .code-block-wrapper {
+          margin: 12px 0;
+          border-radius: 8px;
+          overflow: hidden;
+          background: #1e1e2e;
+          max-width: 100%; /* Critical for mobile */
+          width: 100%;
+        }
+
+        /* For very small screens, reduce padding */
+        @media (max-width: 480px) {
+          .code-block {
+            padding: 12px;
+            font-size: 12px;
+          }
+        }
+        .math-inline {
+          font-family: "Times New Roman", serif;
+          font-style: italic;
+          background: rgba(0, 0, 0, 0.03);
+          padding: 2px 4px;
+          border-radius: 4px;
+          color: inherit;
+        }
+
+        .user-bubble .math-inline {
+          background: rgba(255, 255, 255, 0.15);
+          color: white;
         }
       `}</style>
     </div>
