@@ -135,6 +135,9 @@ print("hello")```
 
 // Horizontal rules
 ---, ***, ___
+
+// Math notation
+$O(n)$ → math expression
 ```
 
 #### b) Typing Indicator
@@ -164,9 +167,9 @@ Each bot has its own SVG icon based on `botLabel`:
 
 ### WelcomeScreen.jsx - Empty State
 Shows when no messages exist:
-- Mode-specific greeting with icon
+- Mode-specific greeting
 - Suggestion chips for quick starts
-- Feature highlights with icons
+- Feature highlights
 - Dynamic suggestions based on mode
 
 ### ChatInput.jsx - Text Input
@@ -179,8 +182,39 @@ Shows when no messages exist:
 ### ModeSelector.jsx - Mobile Tabs
 Alternative navigation for mobile:
 - Horizontal scrollable tabs
-- Shows only icons on very small screens
+- Shows on very small screens
 - Used when sidebar is closed
+
+---
+
+## Project Structure
+
+```
+frontend/
+├── node_modules/
+├── public/
+│   ├── favicon.ico
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── Sidebar.jsx
+│   │   ├── ChatWindow.jsx
+│   │   ├── MessageBubble.jsx
+│   │   ├── ChatInput.jsx
+│   │   ├── WelcomeScreen.jsx
+│   │   └── ModeSelector.jsx
+│   ├── styles/
+│   │   ├── App.css
+│   │   └── index.css
+│   ├── App.js
+│   ├── index.js
+│   └── .env
+├── .gitignore
+├── FRONTEND.md
+├── package-lock.json
+├── package.json
+└── README.md
+```
 
 ---
 
@@ -231,7 +265,7 @@ The custom parser:
 1. Splits text into lines
 2. Detects code blocks (```) and handles them separately
 3. Checks each line for headers, lists, HR
-4. Parses inline formatting (**bold**, `code`)
+4. Parses inline formatting (**bold**, `code`, $math$)
 5. Returns React elements directly
 
 **Inline Formatting Algorithm:**
@@ -239,7 +273,8 @@ The custom parser:
 // Step 1: Find all **bold** text
 // Step 2: Split into parts (text + bold elements)
 // Step 3: Process each text part for `inline code`
-// Step 4: Combine everything preserving order
+// Step 4: Process each text part for $math$ notation
+// Step 5: Combine everything preserving order
 ```
 
 ### Copy Button Implementation
@@ -296,7 +331,7 @@ Each mode has its own color scheme:
 - Hamburger menu to reopen closed sidebar
 - Input padding adjusted for menu button
 - Message bubbles take 95% width on mobile
-- ModeSelector shows as tabs when sidebar closed
+- Code blocks wrap with `white-space: pre-wrap`
 
 ---
 
@@ -316,22 +351,6 @@ Each mode has its own color scheme:
 3. **Conditional rendering** - WelcomeScreen only when empty
 4. **Character streaming** - Small updates prevent UI freeze
 5. **Memoization potential** - MessageBubble could be memoized for long chats
-
----
-
-## File Structure
-```
-src/
-├── App.js                 # Main orchestrator
-├── App.css                # Global styles
-├── components/
-│   ├── Sidebar.jsx        # Navigation & controls
-│   ├── ChatWindow.jsx     # Message container
-│   ├── MessageBubble.jsx  # Individual message + markdown
-│   ├── ChatInput.jsx      # Text input with auto-resize
-│   ├── WelcomeScreen.jsx  # Empty state with suggestions
-│   └── ModeSelector.jsx   # Mode tabs (mobile)
-```
 
 ---
 
@@ -372,7 +391,7 @@ Each bot has its own personality and memory - switching feels like talking to di
 Built from scratch to avoid heavy dependencies:
 - Lightweight (~200 lines)
 - Full control over styling
-- Handles mixed formatting (`**bold with `code`**`)
+- Handles mixed formatting (`**bold with `code` and $math$**`)
 - Extensible for future needs
 
 ### Hover-to-Copy
@@ -392,7 +411,8 @@ Consistent space-themed design language:
 - [ ] Messages persist after refresh
 - [ ] Each mode maintains separate history
 - [ ] Streaming works smoothly with typing effect
-- [ ] Markdown renders correctly (headers, bold, code, lists)
+- [ ] Markdown renders correctly (headers, bold, code, lists, math)
+- [ ] Code blocks wrap properly on mobile
 - [ ] Copy button copies raw text
 - [ ] Clear All removes everything with confirmation
 - [ ] Export creates valid JSON file
@@ -412,5 +432,3 @@ REACT_APP_API_BASE_URL=http://localhost:5000/api
 ```
 
 ---
-
-This architecture balances simplicity with functionality, making it easy to maintain while providing a polished user experience.
