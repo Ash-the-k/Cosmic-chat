@@ -1,21 +1,25 @@
 // components/Sidebar.jsx
-import { useState } from 'react';
+import { useState } from "react";
 
-function Sidebar({ 
-  modes, 
-  currentMode, 
-  onModeSelect, 
-  isOpen, 
+function Sidebar({
+  modes,
+  currentMode,
+  onModeSelect,
+  isOpen,
   onToggle,
   onClearChat,
   onExportChat,
   onClearAllChats, // New prop
-  messageCount 
+  messageCount,
 }) {
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
 
   const handleClearAll = () => {
-    if (window.confirm("⚠️ Are you sure? This will delete ALL chat histories for ALL modes. This cannot be undone!")) {
+    if (
+      window.confirm(
+        "⚠️ Are you sure? This will delete ALL chat histories for ALL modes. This cannot be undone!",
+      )
+    ) {
       onClearAllChats();
       setShowClearAllConfirm(false);
     }
@@ -24,28 +28,42 @@ function Sidebar({
   return (
     <>
       {/* Mobile overlay */}
-      {isOpen && (
-        <div className="sidebar-overlay" onClick={onToggle} />
-      )}
-      
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      {isOpen && <div className="sidebar-overlay" onClick={onToggle} />}
+
+      <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="sidebar-header">
           <div className="logo">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" fill="url(#cosmicGradient)"/>
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="10" fill="url(#cosmicGradient)" />
               {/* Central star */}
-              <path d="M12 5L13.8 10.2L19 12L13.8 13.8L12 19L10.2 13.8L5 12L10.2 10.2L12 5Z" 
-                fill="white" fillOpacity="0.98"/>
+              <path
+                d="M12 5L13.8 10.2L19 12L13.8 13.8L12 19L10.2 13.8L5 12L10.2 10.2L12 5Z"
+                fill="white"
+                fillOpacity="0.98"
+              />
               {/* Small surrounding stars */}
-              <circle cx="7" cy="8" r="0.6" fill="white" fillOpacity="0.6"/>
-              <circle cx="17" cy="7" r="0.6" fill="white" fillOpacity="0.6"/>
-              <circle cx="16" cy="16" r="0.6" fill="white" fillOpacity="0.6"/>
-              <circle cx="8" cy="16" r="0.6" fill="white" fillOpacity="0.6"/>
+              <circle cx="7" cy="8" r="0.6" fill="white" fillOpacity="0.6" />
+              <circle cx="17" cy="7" r="0.6" fill="white" fillOpacity="0.6" />
+              <circle cx="16" cy="16" r="0.6" fill="white" fillOpacity="0.6" />
+              <circle cx="8" cy="16" r="0.6" fill="white" fillOpacity="0.6" />
               <defs>
-                <linearGradient id="cosmicGradient" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#6366f1"/>
-                  <stop offset="0.5" stopColor="#a855f7"/>
-                  <stop offset="1" stopColor="#ec4899"/>
+                <linearGradient
+                  id="cosmicGradient"
+                  x1="2"
+                  y1="2"
+                  x2="22"
+                  y2="22"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stopColor="#6366f1" />
+                  <stop offset="0.5" stopColor="#a855f7" />
+                  <stop offset="1" stopColor="#ec4899" />
                 </linearGradient>
               </defs>
             </svg>
@@ -60,35 +78,47 @@ function Sidebar({
           {Object.entries(modes).map(([key, meta]) => (
             <button
               key={key}
-              className={`mode-item ${currentMode === key ? 'active' : ''}`}
+              className={`mode-item ${currentMode === key ? "active" : ""}`}
               onClick={() => onModeSelect(key)}
               style={{
-                '--mode-color': meta.color
+                "--mode-color": meta.color,
               }}
             >
               <span className="mode-icon">
-                {key === 'default' && (
+                {key === "default" && (
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
-                    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                    <circle cx="12" cy="12" r="4" fill="currentColor" />
                   </svg>
                 )}
-                {key === 'writer' && (
+                {key === "writer" && (
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M3 17.25V21H6.75L17.81 9.94L14.06 6.19L3 17.25ZM20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C17.98 2.9 17.35 2.9 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04Z" 
-                      fill="currentColor"/>
+                    <path
+                      d="M3 17.25V21H6.75L17.81 9.94L14.06 6.19L3 17.25ZM20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C17.98 2.9 17.35 2.9 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04Z"
+                      fill="currentColor"
+                    />
                   </svg>
                 )}
-                {key === 'coder' && (
+                {key === "coder" && (
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M9.4 16.6L4.8 12L9.4 7.4L8 6L2 12L8 18L9.4 16.6ZM14.6 16.6L19.2 12L14.6 7.4L16 6L22 12L16 18L14.6 16.6Z" 
-                      fill="currentColor"/>
+                    <path
+                      d="M9.4 16.6L4.8 12L9.4 7.4L8 6L2 12L8 18L9.4 16.6ZM14.6 16.6L19.2 12L14.6 7.4L16 6L22 12L16 18L14.6 16.6Z"
+                      fill="currentColor"
+                    />
                   </svg>
                 )}
-                {key === 'study' && (
+                {key === "study" && (
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 3L1 9L12 15L21 10.09V17H23V9L12 3ZM18 9L12 12.18L6 9L12 5.82L18 9ZM6 15V12.5L12 16L18 12.5V15L12 18.5L6 15Z" 
-                      fill="currentColor"/>
+                    <path
+                      d="M12 3L1 9L12 15L21 10.09V17H23V9L12 3ZM18 9L12 12.18L6 9L12 5.82L18 9ZM6 15V12.5L12 16L18 12.5V15L12 18.5L6 15Z"
+                      fill="currentColor"
+                    />
                   </svg>
                 )}
               </span>
@@ -105,25 +135,29 @@ function Sidebar({
 
         {messageCount > 0 && (
           <div className="sidebar-footer">
-            <button 
+            <button
               className="sidebar-action export"
               onClick={onExportChat}
               title="Export current chat"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" 
-                  fill="currentColor"/>
+                <path
+                  d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+                  fill="currentColor"
+                />
               </svg>
               Export
             </button>
-            <button 
+            <button
               className="sidebar-action clear"
               onClick={onClearChat}
               title="Clear current chat"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" 
-                  fill="currentColor"/>
+                <path
+                  d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                  fill="currentColor"
+                />
               </svg>
               Clear
             </button>
@@ -132,14 +166,16 @@ function Sidebar({
 
         {/* Clear All Chats Button - Always visible */}
         <div className="clear-all-section">
-          <button 
+          <button
             className="clear-all-button"
             onClick={handleClearAll}
             title="Delete all chat histories for all modes"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" 
-                fill="currentColor"/>
+              <path
+                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+                fill="currentColor"
+              />
             </svg>
             <span>Clear All Chats</span>
           </button>
@@ -457,6 +493,14 @@ function Sidebar({
           }
           100% {
             box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+          }
+        }
+        @media (min-width: 769px) {
+          .sidebar {
+            transform: translateX(0) !important;
+          }
+          .sidebar-overlay {
+            display: none !important;
           }
         }
       `}</style>
