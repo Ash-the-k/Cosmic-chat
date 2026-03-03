@@ -56,20 +56,13 @@ Cosmic Chat is a full-stack AI chatbot that provides the experience of conversin
 
 ### Same Question, Different Modes
 
-<table>
-  <tr>
-    <td align="center" valign="top" width="50%">
-      <strong>Coder Mode</strong><br><br>
-      <img src="screenshots/CoderResponse.png" alt="Coder Mode Response" width="100%"><br>
-      <em>Technical, precise answers with code examples</em>
-    </td>
-    <td align="center" valign="top" width="50%">
-      <strong>Writer Mode</strong><br><br>
-      <img src="screenshots/WriterResponse.png" alt="Writer Mode Response" width="100%"><br>
-      <em>Polished, expressive responses tailored for content</em>
-    </td>
-  </tr>
-</table>
+**Coder Mode** — "What is a palindrome?"
+
+![Coder Mode Response](screenshots/CoderResponse.png)
+
+**Writer Mode** — "What is a palindrome?"
+
+![Writer Mode Response](screenshots/WriterResponse.png)
 
 ---
 
