@@ -408,20 +408,20 @@ Consistent space-themed design language:
 
 ## Testing Checklist
 
-- [ ] Messages persist after refresh
-- [ ] Each mode maintains separate history
-- [ ] Streaming works smoothly with typing effect
-- [ ] Markdown renders correctly (headers, bold, code, lists, math)
-- [ ] Code blocks wrap properly on mobile
-- [ ] Copy button copies raw text
-- [ ] Clear All removes everything with confirmation
-- [ ] Export creates valid JSON file
-- [ ] Mobile responsive with sidebar toggle
-- [ ] No memory leaks during long streams
-- [ ] Error states show properly
-- [ ] Bullet points render with formatting
-- [ ] Code blocks show language tags
-- [ ] Mode switching preserves scroll position
+- Messages persist after refresh
+- Each mode maintains separate history
+- Streaming works smoothly with typing effect
+- Markdown renders correctly (headers, bold, code, lists, math)
+- Code blocks wrap properly on mobile
+- Copy button copies raw text
+- Clear All removes everything with confirmation
+- Export creates valid JSON file
+- Mobile responsive with sidebar toggle
+- No memory leaks during long streams
+- Error states show properly
+- Bullet points render with formatting
+- Code blocks show language tags
+- Mode switching preserves scroll position
 
 ---
 
@@ -432,3 +432,7 @@ REACT_APP_API_BASE_URL=http://localhost:5000/api
 ```
 
 ---
+
+> ⚠️ Note: The current architecture reflects the present implementation.
+> Frontend structure and UI patterns may evolve as long as the backend
+> contract and streaming pipeline remain compatible.
